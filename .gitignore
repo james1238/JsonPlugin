@@ -2,6 +2,7 @@
 # ----------------------------------------------------------------------
 craft/storage/runtime/*
 craft/storage/backups/*
+craft/config/db.php
 
 public_html/gulpfile.js
 public_html/node_modules
@@ -23,3 +24,5 @@ Thumbs.db
 .idea/*
 _notes
 logs/*
+
+
