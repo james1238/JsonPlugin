@@ -40,6 +40,13 @@ class JsonProcessorPlugin extends BasePlugin
 			'jsonFeedUrl'   => array(AttributeType::String)
 		);
 	}
+
+	public function getSettingsHtml()
+	{
+		return craft()->templates->render('jsonProcessor/settings/_settings', array(
+			'settings' => $this->getSettings()
+		));
+	}
     
     public function registerCpRoutes()
     {
