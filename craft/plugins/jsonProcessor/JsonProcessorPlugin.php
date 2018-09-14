@@ -28,6 +28,18 @@ class JsonProcessorPlugin extends BasePlugin
     {
         return true;
     }
+
+	/**
+	 * Plugin settings.
+	 *
+	 * @return array
+	 */
+	protected function defineSettings()
+	{
+		return array(
+			'jsonFeedUrl'   => array(AttributeType::String)
+		);
+	}
     
     public function registerCpRoutes()
     {
