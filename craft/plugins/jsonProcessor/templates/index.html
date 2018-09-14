@@ -1,0 +1,15 @@
+{% set content %}
+
+    <h1>Heading 1</h1>
+    <div class="welcome">
+        Blank plugin
+    </div>
+    {% include "jsonProcessor/uservoice.html" %}
+
+{% endset %}
+
+{% extends "jsonProcessor/_layout" %}
+
+{% set title = "JsonProcessor Dashboard" %}
+
+{% set selectedTab = 'dashboard' %}
