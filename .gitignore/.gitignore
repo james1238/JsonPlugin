@@ -19,5 +19,7 @@ Thumbs.db
 .project
 .settings
 .tmproj
+.idea
+.idea/*
 _notes
 logs/*
