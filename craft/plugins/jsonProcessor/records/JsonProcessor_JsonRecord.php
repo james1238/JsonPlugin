@@ -9,7 +9,7 @@ class JsonProcessor_JsonRecord extends BaseRecord
      */
     public function getTableName()
     {
-        return 'jsonProcessor_json';
+        return 'jsonprocessor_json';
     }
 
     /**
@@ -19,7 +19,7 @@ class JsonProcessor_JsonRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
-            'rawJson'      => AttributeType::Number,
+            'rawJson'      => AttributeType::String,
             'url'          => AttributeType::String
         );
     }
