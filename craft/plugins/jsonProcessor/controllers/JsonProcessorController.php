@@ -61,6 +61,22 @@ class JsonProcessorController extends BaseController
 
     }
 
+    public function actionGetEntries() {
+
+        $entriesQuery = craft()->jsonProcessor_entries->listEntries(0,100);
+
+        $this->returnJson($entriesQuery);
+
+    }
+    public function actionListJson() {
+        //Todo - store these in their own table in the future ability to add multiple feeds etc
+
+        $imports = $this->returnJson(craft()->jsonProcessor_json->listImports());
+
+        return $this->returnJson(craft()->jsonProcessor_json->listImports());
+
+    }
+
 
 
 

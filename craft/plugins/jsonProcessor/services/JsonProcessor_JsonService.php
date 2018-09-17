@@ -43,4 +43,14 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
 
     }
 
+    public function listImports()
+    {
+        $listImports = craft()->db->createCommand()
+            ->select('*')
+            ->from('jsonProcessor_json')->queryAll();
+
+        return $listImports;
+    }
+
+
 }
