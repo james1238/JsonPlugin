@@ -12,24 +12,56 @@ class JsonProcessorController extends BaseController
         craft()->userSession->requireAdmin();
 
         $settings = craft()->plugins->getPlugin('JsonProcessor')->getSettings();
-
         $feedUrl = $settings->jsonFeedUrl;
+
+        if(!isset($feedUrl)) {
+            $feedUrl = 'http://api.letsride.co.uk/public/v1/rides';
+        }
 
         $feedResponce = craft()->jsonProcessor_json->getFeedData($feedUrl);
 
         $jsonModelArray = array(
             'url' 			    => $feedUrl,
-            'rawJson' 			=> $feedResponce
-        );
-
+            'rawJson' 			=> $feedResponce);
         $jsonModel = JsonProcessor_JsonModel::populateModel($jsonModelArray);
 
         craft()->jsonProcessor_json->saveFeedData($jsonModel);
 
-       $this->returnJson('done');
+        $this->processFeed($feedResponce);
 
+        $this->returnJson('done');
+
+   }
+
+    private function processFeed($feedResponce){
+
+        $array = json_decode($feedResponce,1);
+        $this->updateNextFeedUrl('test');
+
+        if($array) {
+
+            //var_dump($array);
+            if($array['next']) {
+                $this->updateNextFeedUrl($array['next']);
+            }
+
+            if($array['items']) {
+                craft()->jsonProcessor_entries->process($array['items']);
+            }
+
+        }
 
     }
+
+    private function updateNextFeedUrl($url) {
+        //Todo - store these in their own table in the future ability to add multiple feeds etc
+
+        $plugin = craft()->plugins->getPlugin('JsonProcessor');
+        craft()->plugins->savePluginSettings( $plugin, array('jsonFeedUrl' => $url));
+
+    }
+
+
 
 
 }
