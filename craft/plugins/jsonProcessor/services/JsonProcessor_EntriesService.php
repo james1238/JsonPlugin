@@ -40,14 +40,37 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
 
             //$entriesRecord->setAttributes($entriesModelArray);
 
-            $entriesRecord->setAttribute('identifier', $item['id']);
-            $entriesRecord->setAttribute('kind', $item['kind']);
-            $entriesRecord->setAttribute('modified', $item['modified']);
-            $entriesRecord->setAttribute('name', $item['data']['name']);
-            $entriesRecord->setAttribute('rawData',  json_encode($item['data']));
+            $entriesRecord->setAttribute('identifier', $item['id'] ?? '');
+            $entriesRecord->setAttribute('kind', $item['kind'] ?? '');
+            $entriesRecord->setAttribute('modified', $item['modified'] ?? '');
+            $entriesRecord->setAttribute('name', $item['data']['name'] ?? '');
+            $entriesRecord->setAttribute('rawData', json_encode($item['data'] ?? ''));
+            $entriesRecord->setAttribute('description', $item['dssddata'] ?? '');
+
+
+            if(isset($item['data']['startDate'])) {
+                $a = new \DateTime($item['data']['startDate']);
+                $b = $a->format('H:i d.m.Y');
+
+                $entriesRecord->setAttribute('startDate', $a);
+            }
+
+            $entriesRecord->setAttribute('latitude', $item['data']['location']['geo']['latitude'] ?? '');
+            $entriesRecord->setAttribute('longitude', $item['data']['location']['geo']['longitude'] ?? '');
+
             $entriesRecord->validate();
-            $entriesRecord->save();
-            //var_dump($item['data']['name']); exit;
+
+            $recordErrors = $entriesRecord->getErrors();
+            if($recordErrors) {
+                foreach($recordErrors as $k => $error) {
+                    JsonProcessorPlugin::log('Pass Error:'. serialize($error), LogLevel::Error);
+                    $entriesRecord->setAttribute($k,'');
+                }
+            }
+
+            if($entriesRecord->validate()) {
+                $entriesRecord->save();
+            }
 
             /* don't have time to do something like this for v1
 
@@ -68,20 +91,57 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
             //$entriesModel = JsonProcessor_EntriesModel::populateModel($entriesModelArray);
 
 
-
-
             //$entriesRecord->setAttribute('name','james');
 
             //$entriesRecord->identifier = $item['id'];
 
 
-
             //exit;
 
-
-
-
         }
-
     }
+    public function listEntries($start,$limit,$orderBy = 'startDate')
+    {
+
+        //Todo - a nicer way of doing this would be to get it from the record then pass an array to exclude
+        $colunmsToinclude = array(
+            'identifier',
+            //'modified',
+            'kind',
+            'name',
+            'url',
+            'startDate',
+            'activity',
+            'description',
+            'logo',
+            'images',
+            'level',
+            'address',
+            'latitude',
+            'longitude',
+            //'rawData'
+        );
+
+        $entriesQuery = craft()->db->createCommand()
+            ->select($colunmsToinclude)
+            ->from('jsonProcessor_entries')
+            ->order($orderBy . ' desc')
+            ->queryAll();
+
+        return $entriesQuery;
+    }
+
+
+    public function deleteEntries()
+    {
+        //Todo delete all in table here
+        $listImports = craft()->db->createCommand()
+            ->select('*')
+            ->from('jsonProcessor_json')
+            ->queryAll();
+
+        return $listImports;
+    }
+
+
 }
