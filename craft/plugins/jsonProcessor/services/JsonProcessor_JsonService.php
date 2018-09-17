@@ -4,17 +4,24 @@ namespace Craft;
 
 class JsonProcessor_JsonService extends BaseApplicationComponent
 {
-
     protected $jsonUrl;
 
     public function getFeedData($url){
 
         $client = new \Guzzle\Http\Client();
-
         $request = $client->get($url);
-        $response = $request->send();
 
-        //var_dump($responce); exit;
+        try {
+            $response = $request->send();
+        }
+        catch (\Exception $e)
+        {
+            craft()->errorHandler->logException($e);
+        }
+
+        if($response->getStatusCode() !== 200) {
+            JsonProcessorPlugin::log('Status 200 not recived? check the url?', LogLevel::Error);
+        }
 
         return $response->getBody();
 
@@ -22,6 +29,9 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
 
     public function saveFeedData(jsonProcessor_JsonModel $jsonModel)
     {
+        if(!$jsonModel->validate()){
+            //Todo - return error here, it won't save anyway but you know
+        }
 
         $jsonRecord = new JsonProcessor_JsonRecord();
 
@@ -29,6 +39,7 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
         $jsonRecord->setAttribute('rawJson', $jsonModel->rawJson);
 
         $jsonRecord->save();
+
 
     }
 
