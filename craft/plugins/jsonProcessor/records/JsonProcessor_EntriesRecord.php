@@ -31,8 +31,8 @@ class JsonProcessor_EntriesRecord extends BaseRecord
             'images'        => AttributeType::String,
             'level'         => AttributeType::String,
             'address'       => AttributeType::String,
-            'latitude'      => AttributeType::Number,
-            'longitude'     => AttributeType::Number,
+            'latitude'      => array(AttributeType::Number => array('min' => 0, 'max' => 3, 'decimals' => 10)),
+            'longitude'     => array(AttributeType::Number => array('min' => 0, 'max' => 3, 'decimals' => 10)),
             'rawData'       => AttributeType::Mixed
         );
     }
@@ -40,7 +40,7 @@ class JsonProcessor_EntriesRecord extends BaseRecord
     public function defineIndexes()
     {
         return array(
-            array('identifier' => array('id'), 'unique' => true)
+            array('columns' => array('identifier'), 'unique' => true),
         );
     }
 
