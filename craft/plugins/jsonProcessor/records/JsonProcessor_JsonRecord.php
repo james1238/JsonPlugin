@@ -19,7 +19,7 @@ class JsonProcessor_JsonRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
-            'rawJson'      => AttributeType::String,
+            'rawJson'      => AttributeType::Mixed,
             'url'          => AttributeType::String
         );
     }
