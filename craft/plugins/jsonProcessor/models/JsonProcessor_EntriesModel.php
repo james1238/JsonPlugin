@@ -1,22 +1,10 @@
 <?php
 namespace Craft;
 
-class JsonProcessor_EntriesRecord extends BaseRecord
+class JsonProcessor_EntriesModel extends BaseElementModel
 {
-    /**
-     * Get Table Name
-     *
-     */
-    public function getTableName()
-    {
-        return 'jsonprocessor_entries';
-    }
 
-    /**
-     * Define Attributes
-     *
-     */
-    public function defineAttributes()
+    protected function defineAttributes()
     {
         return array(
             'identifier'    => AttributeType::Number,
@@ -37,11 +25,5 @@ class JsonProcessor_EntriesRecord extends BaseRecord
         );
     }
 
-    public function defineIndexes()
-    {
-        return array(
-            array('identifier' => array('id'), 'unique' => true)
-        );
-    }
 
 }
