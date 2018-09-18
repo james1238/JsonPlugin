@@ -43,7 +43,7 @@ class JsonProcessorPlugin extends BasePlugin
 
 	public function getSettingsHtml()
 	{
-		return craft()->templates->render('jsonProcessor/settings/_settings', array(
+		return craft()->templates->render('jsonprocessor/settings/_settings', array(
 			'settings' => $this->getSettings()
 		));
 	}

@@ -47,7 +47,7 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
 
     public function deleteAll()
     {
-        craft()->db->createCommand()->delete('jsonProcessor_json');
+        craft()->db->createCommand()->delete('jsonprocessor_json');
 
         return;
     }
@@ -57,7 +57,7 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
         $listImport = craft()->db->createCommand()
             ->select('rawJson')
             ->where(array('id' => $id))
-            ->from('jsonProcessor_json')->queryAll();
+            ->from('jsonprocessor_json')->queryAll();
 
         return $listImport;
     }
@@ -66,7 +66,7 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
     {
         $listImports = craft()->db->createCommand()
             ->select('*')
-            ->from('jsonProcessor_json')->queryAll();
+            ->from('jsonprocessor_json')->queryAll();
 
         return $listImports;
     }

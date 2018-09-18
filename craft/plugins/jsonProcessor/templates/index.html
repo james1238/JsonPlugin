@@ -16,7 +16,7 @@
 <ul>
     <li><span class="date"><b>Date</b></span>  <span class="url"><b>URL</b></span> <span class="download"><b>Download</b> </span>
     {% for entry in craft.jsonProcessor.getImports() %}
-        <li><span class="date">{{ entry.dateProcessed | date('Y-m-d H:i:s') }}</span> <span class="url">{{ entry.url}}</span> <span class="download"><a href="/actions/jsonProcessor/downloadImport?id={{entry.id}}" download="export_{{entry.id}}.json">Download</a> </span>
+        <li><span class="date">{{ entry.dateProcessed | date('Y-m-d H:i:s') }}</span> <span class="url">{{ entry.url}}</span> <span class="download"><a href="/actions/jsonProcessor/listImport?id={{entry.id}}" download="export_{{entry.id}}.json">Download</a> </span>
 {% endfor %}
 </ul>
 {% endset %}

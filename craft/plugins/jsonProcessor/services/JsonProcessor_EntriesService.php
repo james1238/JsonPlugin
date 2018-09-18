@@ -11,7 +11,7 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
     {
         $this->_allEntries = craft()->db->createCommand()
             ->select('*')
-            ->from('jsonProcessor_entries')
+            ->from('jsonprocessor_entries')
             ->queryColumn();
 
         return $this->_allEntryIds;
@@ -125,7 +125,7 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
 
         $entriesQuery = craft()->db->createCommand()
             ->select($colunmsToinclude)
-            ->from('jsonProcessor_entries')
+            ->from('jsonprocessor_entries')
             ->order($orderBy . ' desc')
             ->queryAll();
 
@@ -135,7 +135,7 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
 
     public function deleteAll()
     {
-        craft()->db->createCommand()->delete('jsonProcessor_entries');
+        craft()->db->createCommand()->delete('jsonprocessor_entries');
 
         return;
     }
