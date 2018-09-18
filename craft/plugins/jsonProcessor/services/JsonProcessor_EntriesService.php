@@ -36,23 +36,24 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
 
             $entriesRecord = new JsonProcessor_EntriesRecord();
 
-            //var_dump($entriesModelArray); exit;
-
-            //$entriesRecord->setAttributes($entriesModelArray);
-
             $entriesRecord->setAttribute('identifier', $item['id'] ?? '');
-            $entriesRecord->setAttribute('kind', $item['kind'] ?? '');
+            $entriesRecord->setAttribute('kind', $item['data']['activity'][0]['prefLabel'] ?? '');
             $entriesRecord->setAttribute('modified', $item['modified'] ?? '');
             $entriesRecord->setAttribute('name', $item['data']['name'] ?? '');
             $entriesRecord->setAttribute('rawData', json_encode($item['data'] ?? ''));
-            $entriesRecord->setAttribute('description', $item['dssddata'] ?? '');
+            $entriesRecord->setAttribute('description', $item['data']['programme']['description'] ?? '');
+            $entriesRecord->setAttribute('url', $item['data']['url'] ?? '');
+            $entriesRecord->setAttribute('logo', $item['data']['programme']['logo'] ?? '');
+            $entriesRecord->setAttribute('image', $item['image'] ?? '');
+            $entriesRecord->setAttribute('level', $item['data']['level'][0] ?? '');
+            $entriesRecord->setAttribute('address', $item['location']['address']['postalCode'] ?? '');
+            $entriesRecord->setAttribute('description', $item['data']['programme']['description'] ?? '');
 
 
             if(isset($item['data']['startDate'])) {
-                $a = new \DateTime($item['data']['startDate']);
-                $b = $a->format('H:i d.m.Y');
-
-                $entriesRecord->setAttribute('startDate', $a);
+                //Todo - validate this object
+                $date = new \DateTime($item['data']['startDate']);
+                $entriesRecord->setAttribute('startDate', $date);
             }
 
             $entriesRecord->setAttribute('latitude', $item['data']['location']['geo']['latitude'] ?? '');
@@ -63,7 +64,7 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
             $recordErrors = $entriesRecord->getErrors();
             if($recordErrors) {
                 foreach($recordErrors as $k => $error) {
-                    JsonProcessorPlugin::log('Pass Error:'. serialize($error), LogLevel::Error);
+                    JsonProcessorPlugin::log('Parse Error:'. serialize($error), LogLevel::Error);
                     $entriesRecord->setAttribute($k,'');
                 }
             }
@@ -132,15 +133,11 @@ class JsonProcessor_EntriesService extends BaseApplicationComponent
     }
 
 
-    public function deleteEntries()
+    public function deleteAll()
     {
-        //Todo delete all in table here
-        $listImports = craft()->db->createCommand()
-            ->select('*')
-            ->from('jsonProcessor_json')
-            ->queryAll();
+        craft()->db->createCommand()->delete('jsonProcessor_entries');
 
-        return $listImports;
+        return;
     }
 
 
