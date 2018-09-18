@@ -15,28 +15,32 @@ class JsonProcessorController extends BaseController
         $feedUrl = $settings->jsonFeedUrl;
 
         if(!isset($feedUrl)) {
-            $feedUrl = 'http://api.letsride.co.uk/public/v1/rides';
+            $feedUrl = 'http://api.letsride.co.uk/public/v1/rides?afterTimestamp=3000&afterId=30000';
         }
 
         $feedResponce = craft()->jsonProcessor_json->getFeedData($feedUrl);
 
-        $jsonModelArray = array(
-            'url' 			    => $feedUrl,
-            'rawJson' 			=> $feedResponce);
-        $jsonModel = JsonProcessor_JsonModel::populateModel($jsonModelArray);
+       if($feedResponce) {
 
-        craft()->jsonProcessor_json->saveFeedData($jsonModel);
+           $jsonModelArray = array(
+               'url' => $feedUrl,
+               'rawJson' => $feedResponce);
+           $jsonModel = JsonProcessor_JsonModel::populateModel($jsonModelArray);
 
-        $this->processFeed($feedResponce);
+           craft()->jsonProcessor_json->saveFeedData($jsonModel);
 
-        $this->returnJson('done');
+           $this->processFeed($feedResponce);
+
+           $this->returnJson('done');
+       }
+
+       $this->returnJson('error');
 
    }
 
     private function processFeed($feedResponce){
 
         $array = json_decode($feedResponce,1);
-        $this->updateNextFeedUrl('test');
 
         if($array) {
 
@@ -61,6 +65,17 @@ class JsonProcessorController extends BaseController
 
     }
 
+    public function actionDeleteAllData() {
+
+        craft()->userSession->requireAdmin();
+
+        craft()->jsonProcessor_entries->deleteAll();
+        craft()->jsonProcessor_json->deleteAll();
+
+        $this->returnJson('done');
+
+    }
+
     public function actionGetEntries() {
 
         $entriesQuery = craft()->jsonProcessor_entries->listEntries(0,100);
@@ -68,13 +83,36 @@ class JsonProcessorController extends BaseController
         $this->returnJson($entriesQuery);
 
     }
+
+
     public function actionListJson() {
-        //Todo - store these in their own table in the future ability to add multiple feeds etc
 
         $imports = $this->returnJson(craft()->jsonProcessor_json->listImports());
 
-        return $this->returnJson(craft()->jsonProcessor_json->listImports());
+        return $this->returnJson($imports);
 
+    }
+
+
+    public function actionListImport($id) {
+
+        $import = craft()->jsonProcessor_json->downloadImport($id);
+
+        return $this->returnFormattedJson($import[0]['rawJson']);
+
+
+    }
+
+    public function returnFormattedJson($var = '')
+    {
+        // Set the 'application/json' Content-Type header
+        JsonHelper::setJsonContentTypeHeader();
+
+        // Output it into a buffer, in case TasksService wants to close the connection prematurely
+        ob_start();
+        echo $var;
+
+        craft()->end();
     }
 
 
