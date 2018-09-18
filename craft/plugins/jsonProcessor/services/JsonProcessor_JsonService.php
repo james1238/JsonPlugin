@@ -19,8 +19,9 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
             craft()->errorHandler->logException($e);
         }
 
-        if($response->getStatusCode() !== 200) {
+        if(!isset($response) || $response->getStatusCode() !== 200) {
             JsonProcessorPlugin::log('Status 200 not recived? check the url?', LogLevel::Error);
+            return '';
         }
 
         return $response->getBody();
@@ -37,10 +38,28 @@ class JsonProcessor_JsonService extends BaseApplicationComponent
 
         $jsonRecord->setAttribute('url', $jsonModel->url);
         $jsonRecord->setAttribute('rawJson', $jsonModel->rawJson);
+        $jsonRecord->setAttribute('dateProcessed', new DateTime('now'));
 
         $jsonRecord->save();
 
 
+    }
+
+    public function deleteAll()
+    {
+        craft()->db->createCommand()->delete('jsonProcessor_json');
+
+        return;
+    }
+
+    public function downloadImport($id)
+    {
+        $listImport = craft()->db->createCommand()
+            ->select('rawJson')
+            ->where(array('id' => $id))
+            ->from('jsonProcessor_json')->queryAll();
+
+        return $listImport;
     }
 
     public function listImports()
