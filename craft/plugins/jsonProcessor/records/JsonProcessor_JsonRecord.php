@@ -19,8 +19,9 @@ class JsonProcessor_JsonRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
-            'rawJson'      => AttributeType::Mixed,
-            'url'          => AttributeType::String
+            'rawJson'       => array(AttributeType::Mixed, 'column' => ColumnType::MediumText),
+            'url'           => AttributeType::String,
+            'dateProcessed' => AttributeType::DateTime
         );
     }
     

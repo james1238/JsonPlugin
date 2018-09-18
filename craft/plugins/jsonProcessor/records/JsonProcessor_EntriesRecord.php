@@ -26,7 +26,7 @@ class JsonProcessor_EntriesRecord extends BaseRecord
             'url'           => AttributeType::String,
             'startDate'     => AttributeType::DateTime,
             'activity'      => AttributeType::String,
-            'description'   => AttributeType::String,
+            'description'   => AttributeType::Mixed,
             'logo'          => AttributeType::String,
             'images'        => AttributeType::String,
             'level'         => AttributeType::String,
