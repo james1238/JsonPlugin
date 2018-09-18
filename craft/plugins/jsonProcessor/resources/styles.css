@@ -1,1 +1,16 @@
 /* LESS color Variables */
+
+span.date {
+    min-width: 150px;
+    display: inline-block;
+}
+
+span.url {
+    min-width: 500px;
+    display: inline-block;
+}
+
+span.download{
+    min-width: 50px;
+    display: inline-block;
+}

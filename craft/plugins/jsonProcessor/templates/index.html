@@ -1,11 +1,24 @@
 {% set content %}
 
-    <h1>Heading 1</h1>
+    <h1>Json Processor</h1>
     <div class="welcome">
-        Blank plugin
-    </div>
-    {% include "jsonProcessor/uservoice.html" %}
 
+    </div>
+
+    <form id="purge">
+        <button style="padding: 10px; margin: 10px;background: #ff5b5b; color: #fff; font-size: 16px; border-radius: 3px">Remove all data</button>
+    </form>
+    <form id="refresh">
+        <button style="padding: 10px; margin: 10px;  font-size: 16px;border-radius: 3px" type="submit">Manually Fetch new data</button>
+    </form>
+
+<h2>History of imports</h2>
+<ul>
+    <li><span class="date"><b>Date</b></span>  <span class="url"><b>URL</b></span> <span class="download"><b>Download</b> </span>
+    {% for entry in craft.jsonProcessor.getImports() %}
+        <li><span class="date">{{ entry.dateProcessed | date('Y-m-d H:i:s') }}</span> <span class="url">{{ entry.url}}</span> <span class="download"><a href="/actions/jsonProcessor/downloadImport?id={{entry.id}}" download="export_{{entry.id}}.json">Download</a> </span>
+{% endfor %}
+</ul>
 {% endset %}
 
 {% extends "jsonProcessor/_layout" %}
